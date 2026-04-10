@@ -39,7 +39,7 @@ This experiment implements multi-class semantic segmentation using the **PyTorch
 ```python
 SCALE = 0.5
 BATCH_SIZE = 2
-EPOCHS = 1
+EPOCHS = 10
 LEARNING_RATE = 2e-4
 VAL_PERCENT = 0.1
 NUM_CLASSES = 26
