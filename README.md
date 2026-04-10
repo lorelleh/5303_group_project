@@ -1,10 +1,5 @@
-# groupwork
-## VO
-
-## UNet
-# groupwork
-## VO
-### AAE5303 Assignment: Visual Odometry with ORB-SLAM3
+# AAE5303 groupwork
+## Visual Odometry with ORB-SLAM3
 This repository contains the implementation and analysis of monocular visual odometry using the ORB-SLAM3 framework on the HKisland_GNSS03 UAV aerial imagery dataset.
 
 ---
@@ -29,72 +24,71 @@ This assignment focuses on Monocular VO mode, which:
 
 ---
 
-## UNet
-### AAE5303 Assignment: U-Net for Aerial Image Semantic Segmentation
-This project implements a U-Net model for semantic segmentation on the Amtown aerial imagery dataset, with systematic hyperparameter tuning to achieve stable segmentation performance and clear metric improvements.
+# 2.UNet Semantic Segmentation 
+## 2.1. Overview
+This experiment implements multi-class semantic segmentation using the **PyTorch UNet** framework on the AMtown dataset.
+- Dataset: AMtown (26 classes)
+- Training set: splits 01 + 03
+- Test set: split 02
+- Image scale: 0.5
+- Model: UNet (n_channels=3, n_classes=26, bilinear=False)
+- Optimizer: AdamW
+- Loss: CrossEntropyLoss + DiceLoss (weighted fusion)
 
----
-
-### Key Results
-| Metric | Value | Description |
-|--------|-------|-------------|
-| mean_iou | 0.3778 | Mean Intersection over Union (primary segmentation accuracy metric) |
-| mean_dice | 0.4169 | Mean Dice Coefficient (segmentation region completeness) |
-| pixel_accuracy | 0.9112 | Pixel Accuracy (large-class segmentation & visual quality) |
-| mean_accuracy | 0.4214 | Mean Accuracy (average performance across all 26 classes) |
-| Evaluated Images | 1380 | Full dataset coverage (train/val/test split) |
-
----
-
-### Key Parameter Tuning & Rationale
-#### 1. Loss Function Weighting
-- **Initial Setup**: Cross-Entropy (CE) + Dice Loss (0.5 / 0.5)
-- **Problem**: Low mIoU (~0.35), unstable training, poor small-class segmentation due to severe class imbalance
-- **Tuned Setup**: **0.4 CE + 0.6 Dice**
-- **Rationale**:
-  - Dice loss is more robust to class imbalance, critical for small-class learning
-  - CE loss provides stable classification supervision to prevent training oscillation
-  - 0.4/0.6 ratio balances large-class accuracy and small-class performance
-- **Result**: mIoU improved from ~0.35 to 0.3778, mean Dice stabilized at 0.4169
-
-#### 2. Learning Rate
-- **Initial Setup**: `1e-4`
-- **Problem**: Loss oscillation in late training, failure to converge to global optimum
-- **Tuned Setup**: **`5e-5`**
-- **Rationale**:
-  - High learning rate causes overshooting optimal weights, leading to unstable training
-  - Lower learning rate stabilizes training and ensures steady mIoU improvement
-- **Result**: Smooth loss decay, stable validation performance, continuous mIoU growth
-
-#### 3. Fixed Critical Parameters
-- `IGNORE_INDEX = 255`: Filters empty/unnamed classes in `cmap.py` to avoid invalid annotation interference
-- **Optimizer**: `AdamW` (weight decay = `1e-8`) to prevent overfitting
-- **Image Scale**: `0.5` (balances GPU memory usage and input resolution)
-- **Batch Size**: `2` (adapted to Colab GPU memory constraints)
-- **Training Epochs**: `2`
-
----
-
-### File Structure (Unet Folder)
-```
-Unet/
-├── training_report.json       # GitHub-compliant training report with full metrics & class mapping
-├── amtown02_evaluation_report.json  # Raw evaluation report with per-class IoU/accuracy
-├── checkpoint_epoch1.pth      # Model weights after Epoch 1
-├── checkpoint_epoch2.pth      # Optimal model weights after Epoch 2
-├── 0.4_0.6_5e_Step15.png      # Training process visualization
-└── 0.4_0.6_5e_Step20.png      # Segmentation result visualization
+## 2.2. Hyperparameters
+```python
+SCALE = 0.5
+BATCH_SIZE = 2
+EPOCHS = 1
+LEARNING_RATE = 2e-4
+VAL_PERCENT = 0.1
+NUM_CLASSES = 26
+USE_AMP = True
 ```
 
----
+## 2.3. Evaluation Metrics
+- **mIoU (mean Intersection over Union)**: Average IoU across all valid classes
+- **mean Dice**: Mean Dice similarity coefficient for region overlap
+- **FWIoU (Frequency Weighted IoU)**: IoU weighted by class pixel frequency
+- **Pixel Accuracy**: Overall pixel-wise classification accuracy
 
-### Introduction
-U-Net is a widely adopted encoder-decoder architecture for semantic segmentation, designed specifically for medical and aerial imagery tasks.
+## 2.4. Results
+### 2.4.1 Overall Performance
+| Metric | With Background | Without Background |
+|--------|-----------------|---------------------|
+| mean IoU | 0.8297 | 0.8248 |
+| mean Dice | 0.8906 | 0.8866 |
+| Pixel Accuracy | 0.9775 | 0.9775 |
+| **FWIoU** | **0.9580** | — |
 
-This assignment focuses on aerial image semantic segmentation, which:
-- Classifies each pixel into 26 distinct land-use categories
-- Enables automated mapping and analysis of urban/rural environments
-- Supports downstream tasks like UAV navigation and urban planning
+### 2.4.2 Per-class Results (Valid Classes Only)
+ID | Class | IoU | Dice
+---|-------|-----|------
+0 | background | 0.8975 | 0.9460
+1 | - | 0.9479 | 0.9732
+2 | - | 0.9272 | 0.9622
+3 | - | 0.9493 | 0.9740
+5 | - | 0.7346 | 0.8470
+6 | - | 0.8830 | 0.9378
+13 | - | 0.9791 | 0.9894
+14 | - | 0.9618 | 0.9805
+15 | - | 0.9260 | 0.9616
+16 | - | 0.7429 | 0.8525
+17 | - | 0.9441 | 0.9713
+19 | - | 0.9676 | 0.9836
+20 | - | 0.6403 | 0.7807
+24 | - | 0.7261 | 0.8413
+25 | - | 0.2179 | 0.3579
+
+### 2.4.3 Empty / Non-predicted Classes
+Classes 4, 7, 8, 9, 10, 11, 12, 18, 21, 22, 23 have no valid samples or predictions (IoU/Dice = 0.0).
+
+## 2.5. Conclusion
+1. The UNet model achieves strong overall segmentation performance: **mIoU ≈ 83%, mean Dice ≈ 89%, FWIoU ≈ 95.8%**.
+2. Most major classes have IoU > 90%, indicating stable segmentation.
+3. Classes 20, 24, and 25 show relatively low accuracy and require more data, augmentation, or loss weighting.
+4. A large number of empty classes exist; class merging or removal is recommended for future simplification.
+
 
 ---
 
