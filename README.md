@@ -80,10 +80,10 @@ ID | Class | IoU | Dice
 24 | - | 0.7261 | 0.8413
 25 | - | 0.2179 | 0.3579
 
-### Unet prediction samples
+### 2.4.3 Unet prediction samples
 <img width="842" height="674" alt="amtown_unet_prediction_samples" src="https://github.com/user-attachments/assets/194d2241-1b99-4bf3-a4cd-504413904d3b" />
 
-### 2.4.3 Empty / Non-predicted Classes
+### 2.4.4 Empty / Non-predicted Classes
 Classes 4, 7, 8, 9, 10, 11, 12, 18, 21, 22, 23 have no valid samples or predictions (IoU/Dice = 0.0).
 
 ## 2.5. Conclusion
