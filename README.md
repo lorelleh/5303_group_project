@@ -73,7 +73,7 @@ Rotation drift rate:        106.7148 deg/100m
 | **ATE RMSE** | 2.82 m | A | Very small global error after alignment, high global accuracy |
 | **RPE Trans Drift** | 1.62 m/m | B | Acceptable local translation drift per distance |
 | **RPE Rot Drift** | 111.68 deg/100m | C | Moderate rotation drift, no severe orientation error |
-| **Completeness** | 97.19% | B | Most poses can be successfully evaluated |
+| **Completeness** | 97.19% | A | Most poses can be successfully evaluated |
 
 ---
 
