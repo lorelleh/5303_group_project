@@ -1,28 +1,97 @@
 # AAE5303 groupwork
-## Visual Odometry with ORB-SLAM3
+## 1.Visual Odometry with ORB-SLAM3
 This repository contains the implementation and analysis of monocular visual odometry using the ORB-SLAM3 framework on the HKisland_GNSS03 UAV aerial imagery dataset.
 
 ---
 
-### Key Results
+### 1.1. Key Results
 | Metric | Value | Description |
 |--------|-------|-------------|
-| ATE RMSE | 1.373 m | Global accuracy after Sim(3) alignment |
-| RPE Trans Drift | 4.02 m/m | Translation drift rate (delta=10 m) |
-| RPE Rot Drift | 147.83 deg/100m | Rotation drift rate (delta=10 m) |
-| Completeness | 4.81% | Matched poses / total ground-truth poses |
+| **ATE RMSE** | **2.8163 m** | Global accuracy after Sim(3) alignment (scale corrected)  |
+| **RPE Trans Drift** | **1.6177 m/m** | Translation drift rate (mean error per meter, delta=10 m) |
+| **RPE Rot Drift** | **111.6816 deg/100m** | Rotation drift rate (mean angle per 100 m, delta=10 m) |
+| **Completeness** | **97.19%** | Matched poses / total ground-truth poses (1900 / 1955) |
+| **Estimated poses** | **2,198** | Trajectory poses in `CameraTrajectory.txt` |
 
 ---
 
-### Introduction
-ORB-SLAM3 is a state-of-the-art visual SLAM system capable of monocular, stereo, and visual-inertial odometry.
+### 1.2. ORB Feature Extraction Parameters
 
-This assignment focuses on Monocular VO mode, which:
-- Uses only camera images for pose estimation
-- Enables 6-DoF trajectory tracking without GPS/IMU
-- Is robust to dynamic objects and illumination changes
+| Parameter | Value | Description |
+|-----------|-------|-------------|
+| `nFeatures` | 1500 | Features per frame |
+| `scaleFactor` | 1.2 | Pyramid scale factor |
+| `nLevels` | 8 | Pyramid levels |
+| `iniThFAST` | 15 | Initial FAST threshold |
+| `minThFAST` | 5 | Minimum FAST threshold |
 
 ---
+
+### 1.3. Evaluation Results
+
+```
+================================================================================
+VISUAL ODOMETRY EVALUATION RESULTS
+================================================================================
+
+Ground Truth: RTK trajectory (1,955 poses)
+Estimated:    ORB-SLAM3 camera trajectory (2,198 poses)
+Matched Poses: 1,900 / 1,955 (97.19%)  ← Completeness
+
+METRIC 1: ATE (Absolute Trajectory Error)
+────────────────────────────────────────
+RMSE:   2.8163 m
+Mean:   1 m
+Std:    1 m
+
+METRIC 2: RPE Translation Drift (distance-based, delta=10 m)
+────────────────────────────────────────
+Mean translational RPE over 10 m: 16.3102 m
+Translation drift rate:           1.6310 m/m
+
+METRIC 3: RPE Rotation Drift (distance-based, delta=10 m)
+────────────────────────────────────────
+Mean rotational RPE over 10 m: 10.6715 deg
+Rotation drift rate:        106.7148 deg/100m
+
+================================================================================
+```
+
+### 1.4. Trajectory Alignment Statistics
+
+| Parameter | Value |
+|-----------|-------|
+| **Sim(3) scale correction** | 1.0931 |
+| **Sim(3) translation** | [-0.2262, -0.9340, 0.2420] m |
+| **Association threshold** | \(t_{max\_diff}\) = 0.1 s |
+| **Association rate (Completeness)** | 97.19% |
+
+### 1.5. Performance Analysis
+
+| Metric | Value | Grade | Interpretation |
+|--------|-------|-------|----------------|
+| **ATE RMSE** | 2.82 m | A | Very small global error after alignment, high global accuracy |
+| **RPE Trans Drift** | 1.62 m/m | B | Acceptable local translation drift per distance |
+| **RPE Rot Drift** | 111.68 deg/100m | C | Moderate rotation drift, no severe orientation error |
+| **Completeness** | 97.19% | B | Most poses can be successfully evaluated |
+
+---
+
+### 1.6. Trajectory Comparison
+
+![Trajectory Evaluation](https://github.com/lorelleh/assignment2/blob/3b74b37357a7b9544aaddd4deb5fc78f32525b4d/image/Trajectory%20Comparison.png)
+
+This figure is generated from the same inputs used for evaluation (`ground_truth.tum` and `CameraTrajectory_sec.tum`) and includes:
+
+1. **Top-Left**: 2D trajectory before alignment (matched poses only). This reveals scale/rotation mismatch typical for monocular VO.
+2. **Top-Right**: 2D trajectory after Sim(3) alignment (scale corrected). Remaining discrepancy reflects drift and local tracking errors.
+3. **Bottom-Left**: Distribution of ATE translation errors (meters) over all matched poses.
+4. **Bottom-Right**: ATE translation error as a function of the matched pose index (highlights where drift accumulates).
+
+**Reproducibility**: the figure can be regenerated using `scripts/evaluate_vo_accuracy.py` (which integrates `evo_ape` functionality) together with the `--save_results` output.
+
+---
+
 
 ## 2.UNet Semantic Segmentation 
 ### 2.1. Overview
