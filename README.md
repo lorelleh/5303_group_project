@@ -179,7 +179,7 @@ All trained model checkpoints are hosted externally due to GitHub's file size li
 ---
 
 ## 3.3D Reconstruction
-![Uploading ScreenShot_2026-04-13_191859_217.png…]()
+
 
 
 ### 3.1 Project Overview & Research Dedication
