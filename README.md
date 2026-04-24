@@ -35,24 +35,24 @@ VISUAL ODOMETRY EVALUATION RESULTS
 ================================================================================
 
 Ground Truth: RTK trajectory (1,955 poses)
-Estimated:    ORB-SLAM3 camera trajectory (2,198 poses)
+Estimated:    ORB-SLAM3 camera trajectory (1,919 poses)
 Matched Poses: 1,919 / 1,955 (98.16%)  ← Completeness
 
 METRIC 1: ATE (Absolute Trajectory Error)
 ────────────────────────────────────────
-RMSE:   2.8163 m
-Mean:   1 m
-Std:    1 m
+RMSE:   2.8182 m
+Mean:   2.2362 m
+Std:    1.7151 m
 
 METRIC 2: RPE Translation Drift (distance-based, delta=10 m)
 ────────────────────────────────────────
-Mean translational RPE over 10 m: 16.3102 m
-Translation drift rate:           1.6310 m/m
+Mean translational RPE over 10 m: 16.1787 m
+Translation drift rate:           1.6179 m/m
 
 METRIC 3: RPE Rotation Drift (distance-based, delta=10 m)
 ────────────────────────────────────────
-Mean rotational RPE over 10 m: 10.6715 deg
-Rotation drift rate:        106.7148 deg/100m
+Mean rotational RPE over 10 m: 11.1682 deg
+Rotation drift rate:        111.6815 deg/100m
 
 ================================================================================
 ```
@@ -61,8 +61,8 @@ Rotation drift rate:        106.7148 deg/100m
 
 | Parameter | Value |
 |-----------|-------|
-| **Sim(3) scale correction** | 1.0931 |
-| **Sim(3) translation** | [-0.2262, -0.9340, 0.2420] m |
+| **Sim(3) scale correction** | 4.7398 |
+| **Sim(3) translation** | [-0.2196, 0.8079, 3.7915] m |
 | **Association threshold** | \(t_{max\_diff}\) = 0.2 s |
 | **Association rate (Completeness)** | 98.16% |
 
@@ -70,10 +70,10 @@ Rotation drift rate:        106.7148 deg/100m
 
 | Metric | Value | Grade | Interpretation |
 |--------|-------|-------|----------------|
-| **ATE RMSE** | 2.82 m | A | Very small global error after alignment, high global accuracy |
+| **ATE RMSE** | 2.82 m | A | Small global error after alignment, high global accuracy |
 | **RPE Trans Drift** | 1.62 m/m | B | Acceptable local translation drift per distance |
 | **RPE Rot Drift** | 111.68 deg/100m | C | Moderate rotation drift, no severe orientation error |
-| **Completeness** | 98.16% | A | Most poses can be successfully evaluated |
+| **Completeness** | 98.16% | A | Almost all poses can be successfully evaluated |
 
 ---
 
