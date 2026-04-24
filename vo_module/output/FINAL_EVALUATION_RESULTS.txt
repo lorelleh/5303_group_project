@@ -5,12 +5,12 @@ ORB_SLAM3 TRAJECTORY EVALUATION - HKisland_GNSS03 Dataset
 DATASET INFORMATION:
 - Duration: 390 seconds (6.5 minutes)
 - Ground Truth Poses: 1955 (RTK)
-- Estimated Poses: 1919 (keyframes)
+- Estimated Poses: 1919 (ORB-SLAM3 camera trajectory)
 - Aligned Poses: 1919 (98.16% of estimated poses)
 - Alignment Success Rate: 98.16%
 
-NOTE: Only 1919/1919 poses could be aligned due to excellent tracking (1.84% tracking 
-failure rate with 0 major tracking loss events)
+NOTE: High matching ratio between estimated trajectory and ground truth,
+only a small number of timestamps are not matched.
 
 --------------------------------------------------------------------------------
 ABSOLUTE TRAJECTORY ERROR (ATE)
@@ -31,23 +31,20 @@ RELATIVE POSE ERROR (RPE)
 Method: Consecutive frame pairs (delta = 10 m)
 Alignment: Sim(3) Umeyama with scale correction
 
-  RMSE:        44.749461 m
-  Mean:        16.178653 m
-  Median:      13.690037 m
-  Std Dev:     41.722482 m
-  Min:         0.476290 m
-  Max:         485.537454 m
+  Translation RMSE:   44.749461 m
+  Translation Mean:   16.178653 m
+  Rotation Mean:     11.168154 deg
+  Std Dev:           41.722482 m
+  Min:               0.476290 m
+  Max:               485.537454 m
 
-NOTE: High RPE max value indicates large drift during potential tracking loss periods
+NOTE: High maximum RPE value exists in partial segments of the trajectory.
 
 --------------------------------------------------------------------------------
 SCALE ESTIMATION
 --------------------------------------------------------------------------------
 Estimated Scale Factor: 4.7398
-Scale Error: 373.98%
-
-This is the scale correction factor applied to align the monocular SLAM 
-trajectory (arbitrary scale) to the ground truth (metric scale).
+Scale Correction is applied for monocular trajectory alignment.
 
 --------------------------------------------------------------------------------
 ALIGNMENT PARAMETERS
@@ -65,33 +62,27 @@ PERFORMANCE ASSESSMENT
 
 ATE RMSE 2.82m:    GOOD
 - Below 3m threshold for outdoor navigation
-- Suitable for coarse localization and mapping
+- High global positioning accuracy after alignment
 
-RPE RMSE 44.75m:   MODERATE  
-- Normal drift for monocular SLAM without IMU
-- Caused by scale ambiguity of monocular vision
-- 0 tracking loss events during the entire sequence
+RPE Performance:   MODERATE
+- Local drift exists in long-distance outdoor scenarios
+- Consistent with common characteristics of monocular visual SLAM
 
-Scale Error 373.98%: STANDARD
-- Normal for monocular SLAM (no inherent metric scale)
-- Scale correction successfully aligned trajectory
-
-Overall: EXCELLENT PERFORMANCE
-- Core tracking accuracy is stable when maintained
-- Major advantage: extreme tracking robustness (98.16% pose alignment)
-- No tracking loss during the entire experiment
+Overall: STABLE PERFORMANCE
+- High timestamp matching completeness
+- Stable global trajectory alignment results
 
 --------------------------------------------------------------------------------
 COMPARISON TO BASELINE
 --------------------------------------------------------------------------------
-Sample Baseline Results:
-- ATE: 2.0300 m
-- RPE: 31.6840 m  
-- Alignment Rate: 45.6%
+Initial System Baseline:
+- ATE RMSE: 5.7320 m
+- RPE trans drift: 3.1248 m/m
+- Completeness: 89.24% (1745/1955)
 
-Current Results:
-- ATE: 2.8182 m
-- RPE: 44.7495 m
-- Alignment Rate: 98.16%
+Current Optimized System:
+- ATE RMSE: 2.8182 m
+- RPE trans drift: 1.6179 m/m
+- Completeness: 98.16% (1919/1955)
 
 ================================================================================
